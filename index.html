@@ -278,7 +278,6 @@ a{color:var(--accent)}
 .ri-note{grid-column:1/-1;font-size:12px;color:var(--ink3)}
 .cc-rank{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.14);font-size:11px;font-weight:600;margin-right:8px;vertical-align:2px}
 .cc-badge{margin-top:10px;font-size:13px;font-weight:600;padding:7px 11px;border-radius:12px;background:rgba(255,140,66,.18);border:1px solid rgba(255,170,100,.4)}
-#citiesMore{padding-top:14px}
 .swap .pop{animation:pop .6s var(--ease) both;animation-delay:calc(var(--i,0)*45ms)}
 .mapwrap .land{fill:rgba(255,255,255,.07);stroke:rgba(255,255,255,.32);stroke-width:1.4;stroke-linejoin:round}
 @media (max-width:1020px){.regimp{grid-template-columns:repeat(3,1fr)}}
@@ -599,8 +598,6 @@ svg{overflow:visible}
         <div class="seg" id="regSeg"></div>
       </div>
       <div class="grid cities" id="cities"></div>
-      <button class="citytoggle" id="cityToggle" style="margin-top:14px" data-act="toggle-cities" aria-expanded="false" aria-controls="citiesBox"><span id="cityToggleTxt">Ver as demais cidades</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
-      <div class="collapse closed" id="citiesBox"><div class="collapse-in"><div class="grid cities" id="citiesMore"></div></div></div>
 
 
   </div>
@@ -1182,13 +1179,10 @@ function cityCard(o, i, pos) {
     <div class="cc-badge">${rankBadge(o)}</div></div>`;
 }
 function renderCities(swap) {
-  const top = $('#cities'), more = $('#citiesMore'), first = !top.dataset.r; top.dataset.r = 1; top.parentElement.classList.toggle('enter', first);
+  const top = $('#cities'), first = !top.dataset.r; top.dataset.r = 1; top.parentElement.classList.toggle('enter', first);
   const L = S.derived.filter(o => S.regFilter === 'all' || o.city.reg === S.regFilter).sort((a, b) => rankKey(b) - rankKey(a));
-  top.innerHTML = L.slice(0, 8).map((o, i) => cityCard(o, i, i + 1)).join('');
-  more.innerHTML = L.slice(8).map((o, i) => cityCard(o, i, i + 9)).join('');
-  const tg = $('#cityToggle'); tg.style.display = L.length > 8 ? '' : 'none';
-  $('#cityToggleTxt').textContent = $('#citiesBox').classList.contains('closed') ? `Ver as demais ${Math.max(L.length - 8, 0)} cidades` : 'Recolher cidades';
-  if (swap) { [top, more].forEach(b => b.classList.add('swap')); setTimeout(() => [top, more].forEach(b => b.classList.remove('swap')), 1200); }
+  top.innerHTML = (S.regFilter === 'all' ? L.slice(0, 8) : L).map((o, i) => cityCard(o, i, i + 1)).join('');
+  if (swap) { top.classList.add('swap'); setTimeout(() => top.classList.remove('swap'), 1200); }
   bindSpot();
 }
 const IMPACT = {
@@ -1350,13 +1344,6 @@ function geo() {
   }, err => { done(); toast(err && err.code === 1 ? 'Permissão negada. Libere a localização nas configurações do navegador.' : 'Não foi possível obter sua localização'); }, {timeout: 10000, maximumAge: 600000});
 }
 
-function setCities(open, save = true) {
-  $('#citiesBox').classList.toggle('closed', !open);
-  const b = $('#cityToggle'); b.setAttribute('aria-expanded', open);
-  $('#cityToggleTxt').textContent = open ? 'Recolher cidades' : `Ver as demais ${Math.max(S.derived.filter(o => S.regFilter === 'all' || o.city.reg === S.regFilter).length - 8, 0) || CITIES.length - 8} cidades`;
-  if (save) store.set('cw_cities_open', open);
-}
-setCities(!!store.get('cw_cities_open', false), false);
 
 /* eventos */
 document.addEventListener('click', e => {
@@ -1367,7 +1354,6 @@ document.addEventListener('click', e => {
   else if (a === 'map-pt') { S.mapFocus = id; renderMap(); }
   else if (a === 'metric') { S.metric = t.dataset.m; $$('#metricSeg button').forEach(b => b.classList.toggle('on', b === t)); renderMap(); }
   else if (a === 'na-play') { NA.playing = !NA.playing; NA.t0 = 0; setPlayBtn(); }
-  else if (a === 'toggle-cities') setCities($('#citiesBox').classList.contains('closed'))
   else if (a === 'reg') { S.regFilter = (S.regFilter === t.dataset.k && t.dataset.from === 'imp') ? 'all' : t.dataset.k; renderRegSeg(); renderRegImp(); renderCities(true); }
   else if (a === 'rank') { S.rank = t.dataset.r; $$('#rankSeg button').forEach(b => b.classList.toggle('on', b === t)); renderCities(true); }
   else if (a === 'refresh') refreshAll(true);
