@@ -1,0 +1,16 @@
+{
+  "name": "Clima Brasil",
+  "short_name": "Clima BR",
+  "description": "Tempo real, alertas oficiais e monitor do El Niño para todo o Brasil.",
+  "lang": "pt-BR",
+  "start_url": "/?utm_source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0a1226",
+  "theme_color": "#0a1226",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

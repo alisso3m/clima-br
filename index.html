@@ -10,6 +10,9 @@
 <meta property="og:description" content="Tempo real em todo o Brasil e monitor do El Niño.">
 <meta property="og:type" content="website">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b1a42'/%3E%3Ccircle cx='24' cy='26' r='9' fill='%23ffd36b'/%3E%3Cpath d='M20 50a9 9 0 0 1-.8-17.96A12 12 0 0 1 43 35a7.5 7.5 0 0 1-1 15z' fill='%23eaf2ff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -130,6 +133,36 @@ a{color:var(--accent)}
 .alert.bad{border-left-color:var(--bad);background:linear-gradient(90deg,rgba(255,107,94,.18),var(--glass) 60%)}
 .alert.ok{border-left-color:var(--ok)}
 .alert .em{font-size:22px;line-height:1.1}
+.alert.off{border-left-width:5px}
+.alert.off.bad{background:linear-gradient(90deg,rgba(255,107,94,.26),var(--glass) 65%)}
+.alert.unav{border-left-color:var(--ink3)}
+.stag{display:inline-block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.12);color:var(--ink2);margin-bottom:5px;font-weight:600}
+.stag.off{background:rgba(255,255,255,.92);color:#0a1226}
+.alert a{color:#fff;text-decoration:underline}
+.alert .sub{display:block;margin-top:4px;font-size:12px;color:var(--ink3)}
+.advice{margin-top:12px;padding:16px 18px}
+.advice h3{font-family:'Outfit',sans-serif;font-weight:500;font-size:16px;margin-bottom:8px}
+.advice ul{list-style:none;display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.advice li{display:flex;gap:10px;font-size:13px;color:var(--ink2)}
+.advice li b{color:#fff;font-weight:600}
+.notify{margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 18px;font-size:13px;color:var(--ink2)}
+.notify .btn{margin:0}
+.nowc{padding:18px 20px;display:grid;gap:12px}
+.nowc h3{font-family:'Outfit',sans-serif;font-weight:500;font-size:18px}
+.nowc .nw-t{font-size:15px}
+.nowc .nw-t b{font-family:'Outfit',sans-serif;font-weight:500;font-size:22px;display:block;margin-bottom:2px}
+.rbars{display:flex;align-items:flex-end;gap:6px;height:64px}
+.rbars i{display:block;flex:1;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#8fd0ff,#4a9dff);min-height:4px;opacity:.9;transform-origin:bottom;animation:grow .8s var(--ease) both;animation-delay:calc(var(--i)*60ms)}
+.rbars i.z{background:rgba(255,255,255,.18);opacity:1}
+.nlab{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3)}
+.nw-s{font-size:12px;color:var(--ink3)}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.linkbtn{background:none;border:0;color:var(--ink2);text-decoration:underline;font:inherit;cursor:pointer;padding:0}
+.lite *,.lite *::before,.lite *::after{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.lite .card,.lite .alert,.lite .citytoggle,.lite .live,.lite header{background:rgba(14,28,64,.9)!important}
+.lite .blob{display:none}
+@media (max-width:560px){.sharebtn span{display:none}.sharebtn{padding:8px 11px}}
+
 .alert b{display:block;font-family:'Outfit',sans-serif;font-weight:500;font-size:16px}
 .alert p{font-size:13px;color:var(--ink2)}
 
@@ -513,7 +546,7 @@ svg{overflow:visible}
             <div class="fact"><i>🌧️</i><div><b>Chuva:</b> costuma diminuir no Norte e no Nordeste e aumentar no Sul. No Sudeste fica mais irregular, e o norte de Minas tende a ficar mais seco.</div></div>
             <div class="fact"><i>🔥</i><div><b>Ar seco e queimadas:</b> calor e baixa umidade elevam o risco de incêndios. Onde chove demais, aumentam enchentes e deslizamentos.</div></div>
           </div>
-          <p class="src" style="margin-bottom:0"><b style="color:var(--ink2)">Atenção:</b> o quadro da NOAA acima atualiza sozinho; os três tópicos de impacto são um resumo editorial (boletins de ago–out/2026) e não mudam sozinhos. El Niño muda as probabilidades, não garante o resultado em cada cidade.<br>
+          <p class="src" style="margin-bottom:0"><b style="color:var(--ink2)">Atenção:</b> o quadro da NOAA acima atualiza sozinho; os tópicos de impacto são um resumo editorial (boletins de ago–out/2026), revisado em <b id="editRev"></b> e não mudam sozinhos. El Niño muda as probabilidades, não garante o resultado em cada cidade.<br>
           Fontes: <a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.html" target="_blank" rel="noopener">NOAA/CPC</a> · <a href="https://www.sgb.gov.br/" target="_blank" rel="noopener">Painel El Niño 2026-27 (SGB/Cemaden/Inmet)</a> · <a href="https://www.agenciaminas.mg.gov.br/" target="_blank" rel="noopener">Agência Minas</a> · <a href="https://alertas2.inmet.gov.br/" target="_blank" rel="noopener">Alertas Inmet</a></p>
         </article>
         <div>
@@ -526,7 +559,8 @@ svg{overflow:visible}
       </div>
     </section>
 
-    <section class="reveal" id="alertsSec" aria-label="Alertas"><div class="alerts" id="alerts"></div></section>
+    <section class="reveal" id="nowSec" aria-label="Chuva nas próximas horas"><div class="card nowc" id="nowcast" hidden></div></section>
+    <section class="reveal" id="alertsSec" aria-label="Alertas"><div class="alerts" id="alerts"></div><div class="card advice" id="advice" hidden></div><div class="card notify" id="notify" hidden></div></section>
 
     <section class="sec reveal" id="previsao">
       <div class="sec-h"><div><div class="eyebrow">Próximas 24 horas</div><h2>Hora a hora</h2></div></div>
@@ -576,6 +610,7 @@ svg{overflow:visible}
   <div class="wrap">
     <p>Dados de modelos meteorológicos por <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a> (CC BY 4.0), atualizados automaticamente a cada 5 minutos. Os alertas desta página são calculados a partir da previsão e não substituem os avisos oficiais.</p>
     <p>Emergências: Defesa Civil <b>199</b> · Bombeiros <b>193</b> · <a href="https://alertas2.inmet.gov.br/" target="_blank" rel="noopener">Alertas oficiais do Inmet</a></p>
+    <p>Avisos oficiais: Inmet · Medições: estações automáticas do Inmet · Focos de calor: INPE/Programa Queimadas · <button class="linkbtn" data-act="lite" id="liteBtn"></button></p>
   </div>
 </footer>
 
@@ -602,6 +637,9 @@ svg{overflow:visible}
 <script>
 (() => {
 'use strict';
+const LITE = (() => { let v = null; try { v = JSON.parse(localStorage.getItem('cw_lite')); } catch {}
+  if (v === null || v === undefined) { const c = navigator.connection; v = !!((c && c.saveData) || (navigator.deviceMemory && navigator.deviceMemory <= 2) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2)); }
+  if (v) document.documentElement.classList.add('lite'); return !!v; })();
 
 /* ============ dados base ============ */
 const TZ = 'America/Sao_Paulo';
@@ -722,13 +760,24 @@ async function getJSON(url, tries = 2) {
   throw err;
 }
 const API = 'https://api.open-meteo.com/v1/forecast';
+const CAN_API = /^https?:$/.test(location.protocol);
+/* Open-Meteo via /api/wx (cache de borda, aguenta público grande); se a rota não existir ou falhar, vai direto. */
+async function getWx(url) {
+  if (CAN_API && !S.noApi) {
+    try { return await getJSON('/api/wx?u=' + encodeURIComponent(url), 1); }
+    catch (e) { if (/HTTP 404|HTTP 405/.test(e.message)) S.noApi = true; }
+  }
+  return getJSON(url);
+}
+const api = (path, params) => getJSON(path + '?' + new URLSearchParams(params), 1);
+const r2 = v => (+v).toFixed(2);
 const tzq = '&timezone=' + encodeURIComponent(TZ);
 
 async function loadRegion() {
   const lat = CITIES.map(c => c.lat).join(','), lon = CITIES.map(c => c.lon).join(',');
   const url = `${API}?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max&past_days=10&forecast_days=7${tzq}`;
   let data;
-  try { data = await getJSON(url); store.set('cw_region', {at: Date.now(), data}); }
+  try { data = await getWx(url); store.set('cw_region', {at: Date.now(), data}); }
   catch (e) { const c = store.get('cw_region'); if (!c) throw e; data = c.data; }
   const arr = Array.isArray(data) ? data : [data];
   S.region = {};
@@ -747,18 +796,112 @@ async function loadRegion() {
 
 async function loadDetail(city) {
   const token = ++S.token;
-  const url = `${API}?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,is_day,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,precipitation_sum,precipitation_probability_max,sunrise,sunset,uv_index_max,wind_speed_10m_max&past_days=10&forecast_days=7${tzq}`;
+  const url = `${API}?latitude=${r2(city.lat)}&longitude=${r2(city.lon)}&minutely_15=precipitation&forecast_minutely_15=8&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,is_day,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,precipitation_sum,precipitation_probability_max,sunrise,sunset,uv_index_max,wind_speed_10m_max&past_days=10&forecast_days=7${tzq}`;
   const key = 'cw_d_' + city.id;
   let data, stale = false;
-  try { data = await getJSON(url); store.set(key, {at: Date.now(), data}); }
+  try { data = await getWx(url); store.set(key, {at: Date.now(), data}); }
   catch (e) { const c = store.get(key); if (!c) throw e; data = c.data; stale = c.at; }
   if (token !== S.token) return false;
   const same = S.detail && sameCity(S.detail.city, city);
   S.detail = {city, data, stale};
-  const air = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${city.lat}&longitude=${city.lon}&current=us_aqi,pm2_5,pm10${tzq}`;
+  const air = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${r2(city.lat)}&longitude=${r2(city.lon)}&current=us_aqi,pm2_5,pm10${tzq}`;
   if (!same) S.air = null;
-  getJSON(air, 1).then(a => { if (token === S.token) { S.air = a.current; renderDetails(); renderAlerts(); } }).catch(() => {});
+  getWx(air).then(a => { if (token === S.token) { S.air = a.current; renderDetails(); renderAlerts(); } }).catch(() => {});
+  loadExtras(city, token, same);
   return true;
+}
+
+/* ============ extras: avisos oficiais, estação medida, focos de calor ============ */
+function loadExtras(city, token, same) {
+  if (!same) { S.official = null; S.obs = null; S.fires = null; }
+  if (!CAN_API || S.noApi) return;
+  const ll = {lat: r2(city.lat), lon: r2(city.lon)};
+  api('/api/alerts', {city: city.name, uf: city.uf || ''}).then(r => { if (token === S.token) { S.official = r; renderAlerts(); checkNotify(); } })
+    .catch(e => { if (token === S.token && !/HTTP 404/.test(e.message)) { S.official = {ok: false}; renderAlerts(); } });
+  api('/api/obs', ll).then(r => { if (token === S.token) { S.obs = r.ok ? r : null; renderDetails(); } }).catch(() => {});
+  api('/api/fires', ll).then(r => { if (token === S.token) { S.fires = r.ok ? r : null; renderDetails(); renderAlerts(); } }).catch(() => {});
+}
+const fmtWhen = s => { if (!s) return ''; const d = new Date(String(s).replace(' ', 'T')); return isNaN(d) ? String(s) : pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+const SEVL = ['', 'Perigo potencial', 'Perigo', 'Grande perigo'];
+const offEmoji = t => { t = norm(t); return /tempest|raio|trovoad|granizo/.test(t) ? '⛈️' : /calor/.test(t) ? '🔥' : /chuva|ressaca|alag|inunda/.test(t) ? '🌧️' : /frio|geada|friagem/.test(t) ? '❄️' : /vento|ciclone/.test(t) ? '💨' : /umidade|seca|baixa/.test(t) ? '🏜️' : /incend|queima/.test(t) ? '🔥' : '⚠️'; };
+
+/* chuva nas próximas 2 horas (modelo, passos de 15 min) */
+function nowcast() {
+  const d = S.detail && S.detail.data, m = d && d.minutely_15; if (!m || !m.time || !m.precipitation) return null;
+  const cur = d.current.time.slice(0, 16), cm = +cur.slice(14, 16), key = cur.slice(0, 14) + pad(Math.floor(cm / 15) * 15);
+  let i0 = m.time.findIndex(t => t >= key); if (i0 < 0) return null;
+  const v = m.precipitation.slice(i0, i0 + 8).map(x => (x || 0) * 4); // mm/h
+  if (v.length < 4) return null;
+  return v;
+}
+function renderNowcast() {
+  const box = $('#nowcast'), v = nowcast(); if (!v) { box.hidden = true; return; }
+  const th = .3, wet = v.map(x => x >= th), nowWet = wet[0] || (S.detail.data.current.precipitation || 0) > 0.1;
+  const k = wet.indexOf(true), peak = Math.max(...v), lvl = peak >= 30 ? 'forte' : peak >= 7.6 ? 'moderada' : 'fraca';
+  let head, sub;
+  if (!wet.some(Boolean) && !nowWet) { head = 'Sem chuva prevista nas próximas 2 horas'; sub = 'O modelo não indica chuva até ' + hhmm(8 * 15) + '.'; }
+  else if (nowWet) { const stop = wet.findIndex((x, j) => j > 0 && !x); head = stop < 0 ? 'Chovendo agora, deve continuar por 2 h ou mais' : `Chovendo agora, deve parar em ~${stop * 15} min`; sub = `Intensidade ${lvl} (pico de ${num(peak, 1)} mm/h).`; }
+  else { head = k === 0 ? 'Chuva começando agora' : `Chuva deve chegar em ~${k * 15} min`; sub = `Intensidade ${lvl} (pico de ${num(peak, 1)} mm/h).`; }
+  box.hidden = false;
+  box.innerHTML = `<h3>🌧️ Chuva nas próximas 2 horas</h3><div class="nw-t"><b>${esc(head)}</b>${esc(sub)}</div>
+    <div class="rbars" role="img" aria-label="${esc(head)}">${v.slice(0, 8).map((x, j) => `<i class="${x < th ? 'z' : ''}" style="--i:${j};height:${x < th ? 6 : clamp(14 + x * 6, 14, 100)}%" title="${num(x, 1)} mm/h"></i>`).join('')}</div>
+    <div class="nlab"><span>Agora</span><span>+30 min</span><span>+1 h</span><span>+1h30</span><span>+2 h</span></div>
+    <div class="nw-s">Previsão de modelo a cada 15 minutos. Pancadas localizadas podem fugir do previsto.</div>`;
+}
+const hhmm = min => { const d = new Date(Date.now() + min * 60000); return pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+
+/* orientações práticas conforme as condições */
+function buildAdvice(V) {
+  const A = [], c = V.c, rh = c.relative_humidity_2m, ap = c.apparent_temperature, uv = V.dl.uv_index_max[V.t0] ?? 0;
+  const st = V.H.find(x => x.code >= 95), rain = sum(V.H.map(x => x.mm)), mx = Math.max(V.dl.temperature_2m_max[V.t0] ?? 0, V.dl.temperature_2m_max[V.t0 + 1] ?? 0);
+  if (st) A.push(['⛈️', 'Tempestade', 'Fique em local fechado, longe de árvores, postes e fios. Evite usar aparelhos ligados na tomada e não atravesse ruas alagadas.']);
+  if (rain >= 30) A.push(['🌊', 'Chuva forte', 'Evite áreas de alagamento e encostas. Nunca atravesse água corrente a pé ou de carro. Em emergência, ligue 199 (Defesa Civil).']);
+  if (mx >= 35 || ap >= 38) A.push(['🥵', 'Calor', 'Beba água mesmo sem sede, evite o sol entre 10h e 16h e redobre a atenção com crianças e idosos. Nunca deixe pessoas ou animais dentro de carros.']);
+  if (rh < 30) A.push(['💧', 'Ar seco', 'Hidrate-se, umidifique o ambiente (toalha úmida, bacia com água), use soro nasal se precisar e evite exercício intenso no horário mais seco.']);
+  if (rh < 30 || V.dry >= 7 || (S.fires && S.fires.n > 0)) A.push(['🔥', 'Fogo', 'Não queime lixo nem mato e não jogue bituca de cigarro. Viu fumaça ou fogo? Ligue 193 (Bombeiros).']);
+  if (uv >= 8) A.push(['🧴', 'Sol forte', 'Protetor solar FPS 30 ou mais, reaplicado a cada 2 horas, além de chapéu e óculos.']);
+  if (S.air && S.air.us_aqi >= 101) A.push(['😷', 'Ar poluído', 'Quem tem asma ou problema respiratório deve reduzir atividades ao ar livre e manter janelas fechadas nas horas de pior ar.']);
+  return A;
+}
+function renderAdvice(V) {
+  const box = $('#advice'), A = buildAdvice(V); if (!A.length) { box.hidden = true; return; }
+  box.hidden = false;
+  box.innerHTML = `<h3>🧭 O que fazer agora</h3><ul>${A.map(a => `<li><span aria-hidden="true">${a[0]}</span><span><b>${esc(a[1])}:</b> ${esc(a[2])}</span></li>`).join('')}</ul>`;
+}
+
+/* ============ notificações (app aberto/instalado) ============ */
+const canNotify = () => 'Notification' in window && 'serviceWorker' in navigator && CAN_API;
+const notifyOn = () => canNotify() && Notification.permission === 'granted' && !!store.get('cw_notify');
+function swPost(msg) { if (navigator.serviceWorker && navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage(msg); else if (navigator.serviceWorker) navigator.serviceWorker.ready.then(r => r.active && r.active.postMessage(msg)).catch(() => {}); }
+function renderNotifyBox() {
+  const box = $('#notify'); if (!box) return;
+  if (!canNotify() || Notification.permission === 'denied') { box.hidden = true; return; }
+  const on = notifyOn(), tgt = S.pin ? S.pin.name : (S.sel ? S.sel.name : '');
+  box.hidden = false;
+  box.innerHTML = on ? `<span>🔔 Avisos ligados para <b style="color:#fff">${esc(S.pin ? S.pin.name : tgt)}</b>. Você será notificado de avisos oficiais e de tempestades.</span><button class="btn ghost" data-act="notify">Desligar</button>`
+    : `<span>🔔 Receber aviso quando houver alerta oficial na sua cidade fixada?</span><button class="btn" data-act="notify">Ativar avisos</button><small style="flex-basis:100%;color:var(--ink3)">Funciona com o site aberto ou instalado na tela inicial. Para instalar: menu do navegador → "Adicionar à tela inicial".</small>`;
+}
+async function toggleNotify() {
+  if (notifyOn()) { store.set('cw_notify', 0); renderNotifyBox(); toast('Avisos desligados'); return; }
+  if (!S.pin && S.sel) setPin(S.sel);
+  const perm = await Notification.requestPermission();
+  if (perm !== 'granted') { renderNotifyBox(); toast('Permissão de notificação negada'); return; }
+  store.set('cw_notify', 1); syncPinToSW();
+  try { const reg = await navigator.serviceWorker.ready; if (reg.periodicSync) await reg.periodicSync.register('check-alerts', {minInterval: 60 * 60 * 1000}); } catch {}
+  renderNotifyBox(); toast('🔔 Avisos ativados'); checkNotify();
+}
+function syncPinToSW() { if (canNotify()) swPost({type: 'pin', city: S.pin ? {name: S.pin.name, uf: S.pin.uf || ''} : null}); }
+async function checkNotify() {
+  if (!notifyOn() || !S.pin || !S.sel || !sameCity(S.pin, S.sel)) return;
+  const done = new Set(store.get('cw_notified', [])), V = view(), out = [];
+  if (S.official && S.official.ok) S.official.alerts.filter(a => a.sev >= 2).forEach(a => out.push({k: 'o:' + a.id, t: '⚠️ ' + a.title, b: (a.risks || 'Aviso oficial do Inmet para ' + S.pin.name) + (a.end ? ' · até ' + fmtWhen(a.end) : '')}));
+  if (V) buildAlerts(V).filter(a => a.l === 'bad').forEach(a => out.push({k: 'c:' + S.pin.id + ':' + a.t + ':' + V.today, t: a.e + ' ' + a.t, b: a.p}));
+  const fresh = out.filter(x => !done.has(x.k)); if (!fresh.length) return;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    for (const x of fresh.slice(0, 3)) { await reg.showNotification(x.t + ' · ' + S.pin.name, {body: x.b.slice(0, 140), tag: x.k, icon: '/icon-192.png', badge: '/icon-192.png', data: {url: '/'}}); done.add(x.k); }
+    store.set('cw_notified', [...done].slice(-60)); swPost({type: 'notified', ids: [...done].filter(k => k.startsWith('o:'))});
+  } catch {}
 }
 
 /* ============ derivados do detalhe ============ */
@@ -837,6 +980,7 @@ function renderHero() {
         <button class="pinbtn ${pinned ? 'on' : ''}" data-act="pin" data-id="${esc(city.id)}" aria-pressed="${pinned}">
           <svg viewBox="0 0 24 24" fill="${pinned ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z"/></svg>${pinned ? 'Fixada na home' : 'Fixar na home'}</button>
         <button class="pinbtn gpsbtn" data-act="geo" aria-label="Usar minha localização" title="Usar minha localização (GPS)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3"/></svg><span>Minha localização</span></button>
+        <button class="pinbtn sharebtn" data-act="share" aria-label="Compartilhar previsão" title="Compartilhar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg><span>Compartilhar</span></button>
       </div>
       <div class="bigtemp" aria-label="Temperatura atual ${rd(c.temperature_2m)} graus"><span class="n" id="tempN">${rd(c.temperature_2m)}</span><span class="u">°C</span></div>
       <div class="cond">${icon(c.weather_code, c.is_day)}<span>${w.t}</span></div>
@@ -880,11 +1024,26 @@ function buildAlerts(V) {
   if (!A.length) A.push({l:'ok', e:'✅', t:'Sem alertas relevantes', p:'Nenhuma condição de risco identificada na previsão para as próximas 24 horas.'});
   return A;
 }
+function offCard(a, i) {
+  const bad = a.sev >= 2;
+  return `<div class="alert off ${bad ? 'bad' : 'warn'} pop" style="--i:${i}"><span class="em" aria-hidden="true">${offEmoji(a.title)}</span><div><span class="stag off">Oficial · Inmet</span><b>${esc(a.title)}</b>
+    <p>${esc(SEVL[a.sev] || 'Aviso')}${a.end ? ' · até ' + esc(fmtWhen(a.end)) : ''}${a.risks ? '. ' + esc(a.risks) : ''}</p>${a.tips ? `<span class="sub">${esc(a.tips)}</span>` : ''}</div></div>`;
+}
 function renderAlerts() {
   const V = view(); if (!V) return;
   const box = $('#alerts'), first = !box.dataset.r; box.dataset.r = 1;
   box.parentElement.classList.toggle('enter', first);
-  box.innerHTML = buildAlerts(V).map((a, i) => `<div class="alert ${a.l} pop" style="--i:${i}"><span class="em" aria-hidden="true">${a.e}</span><div><b>${esc(a.t)}</b><p>${esc(a.p)}</p></div></div>`).join('');
+  const O = S.official, c = V.city, parts = []; let i = 0;
+  const link = '<a href="https://alertas2.inmet.gov.br/" target="_blank" rel="noopener">alertas2.inmet.gov.br</a>';
+  if (O && O.ok && O.alerts.length) O.alerts.forEach(a => parts.push(offCard(a, i++)));
+  else if (O && O.ok) parts.push(`<div class="alert ok pop" style="--i:${i++}"><span class="em" aria-hidden="true">🛡️</span><div><span class="stag off">Oficial · Inmet</span><b>Sem avisos do Inmet para ${esc(c.name)}</b><p>Nenhum aviso ativo para o município agora.${O.inUf ? ` Há ${O.inUf} aviso(s) ativo(s) em outras cidades do estado: ` + link + '.' : ''}</p></div></div>`);
+  else if (O) parts.push(`<div class="alert unav pop" style="--i:${i++}"><span class="em" aria-hidden="true">📡</span><div><span class="stag">Avisos oficiais</span><b>Não consegui consultar os avisos do Inmet agora</b><p>Consulte ${link} e, em emergência, a Defesa Civil (199).</p></div></div>`);
+  let comp = buildAlerts(V);
+  if (O && O.ok && O.alerts.length) comp = comp.filter(a => a.l !== 'ok');
+  if (S.fires && S.fires.n > 0) comp.push({l: S.fires.n >= 10 ? 'bad' : 'warn', e: '🔥', t: `${S.fires.n} foco(s) de calor a menos de ${S.fires.radius} km`, p: 'Detectados por satélite nas últimas 24 h (INPE). Pode haver queimada na região: não use fogo e evite áreas com fumaça.'});
+  comp.forEach(a => parts.push(`<div class="alert ${a.l} pop" style="--i:${i++}"><span class="em" aria-hidden="true">${a.e}</span><div><span class="stag">Estimativa pela previsão</span><b>${esc(a.t)}</b><p>${esc(a.p)}</p></div></div>`));
+  box.innerHTML = parts.join('');
+  renderAdvice(V); renderNotifyBox();
 }
 
 /* ============ render: hora a hora ============ */
@@ -913,7 +1072,9 @@ function renderDetails() {
   const hh = t => t.slice(11, 16);
   const aq = S.air ? aqiInfo(S.air.us_aqi) : null;
   const uvc = ramp([[0,'#5ee0c1'],[3,'#b6e36a'],[6,'#ffd45e'],[8,'#ff9f43'],[11,'#ff5b4a']], uvMax);
-  const cards = [
+  const o = S.obs, F = S.fires, cards = [
+    o ? `<h3>📡 Medido agora</h3><div class="val">${rd(o.t)}°<small>C</small></div><div class="note"><b style="color:#fff">${esc(o.station.name)}</b> (Inmet, a ${o.station.km} km) às ${pad(new Date(o.at).getHours())}:${pad(new Date(o.at).getMinutes())}.<br>Umidade ${rd(o.rh)}% · chuva 1 h: ${num(o.rain1h, 1)} mm · 24 h: ${num(o.rain24h, 1)} mm${o.wind != null ? ' · vento ' + o.wind + ' km/h' : ''}.<br>Previsão do modelo: ${rd(c.temperature_2m)}°.</div>` : null,
+    F ? `<h3>🔥 Focos de calor</h3><div class="val">${F.n}<small>em ${F.radius} km · 24 h</small></div><div class="note">${F.n ? 'Satélites detectaram focos de calor perto daqui. Não use fogo e evite áreas com fumaça.' : 'Nenhum foco detectado no raio.' + (F.nearest != null ? ' O mais próximo está a ' + F.nearest + ' km.' : '')} Foco de calor não é incêndio confirmado. Fonte: INPE.</div>` : null,
     `<h3>🌡️ Sensação térmica</h3><div class="val">${rd(c.apparent_temperature)}°<small>C</small></div><div class="vis"><svg class="gauge" viewBox="0 0 120 70" aria-hidden="true"><path class="trk" d="${arcPath(60, 62, 48)}" pathLength="1"/><path class="fg" pathLength="1" d="${arcPath(60, 62, 48)}" style="--p:${clamp((c.apparent_temperature - 5) / 40, .03, 1)};stroke:${tempColor(c.apparent_temperature)}"/></svg></div><div class="note">${c.apparent_temperature - c.temperature_2m >= 2 ? 'Parece mais quente que o termômetro.' : c.apparent_temperature - c.temperature_2m <= -2 ? 'Parece mais frio que o termômetro.' : 'Próxima da temperatura real.'}</div>`,
     `<h3>💧 Umidade</h3><div class="val">${rd(rh)}<small>%</small></div><div class="vis"><div class="drop"><i style="--h:0%" data-h="${clamp(rh, 4, 100)}%"></i></div></div><div class="note">${rh < 20 ? 'Crítica: ar muito seco.' : rh < 30 ? 'Baixa: estado de atenção.' : rh < 60 ? 'Confortável.' : 'Alta, ar úmido.'} Ponto de orvalho ~${rd(dpt)}°.</div>`,
     `<h3>🧭 Vento</h3><div class="val">${rd(c.wind_speed_10m)}<small>km/h ${dirLabel(c.wind_direction_10m)}</small></div><div class="vis"><div class="compass"><span class="cn">N</span><span class="cs">S</span><span class="ce">L</span><span class="cw">O</span><div class="arrow" style="--rot:0deg" data-rot="${(c.wind_direction_10m + 180) % 360}deg"></div></div></div><div class="note">Rajadas de até ${rd(c.wind_gusts_10m)} km/h.</div>`,
@@ -924,7 +1085,7 @@ function renderDetails() {
     aq ? `<h3>😷 Qualidade do ar</h3><div class="val">${rd(S.air.us_aqi)}<small>${aq.t}</small></div><div class="vis"><svg class="gauge" viewBox="0 0 120 70" aria-hidden="true"><path class="trk" d="${arcPath(60, 62, 48)}" pathLength="1"/><path class="fg" pathLength="1" d="${arcPath(60, 62, 48)}" style="--p:${clamp(S.air.us_aqi / 200, .03, 1)};stroke:${aq.c}"/></svg></div><div class="note">PM2,5: ${num(S.air.pm2_5, 0)} µg/m³ · PM10: ${num(S.air.pm10, 0)} µg/m³</div>`
        : `<h3>😷 Qualidade do ar</h3><div class="val">–</div><div class="vis"><div class="sk" style="width:90px;height:50px"></div></div><div class="note">Carregando…</div>`
   ];
-  box.innerHTML = cards.map((h, i) => `<article class="card dcard spot pop" style="--i:${i}">${h}</article>`).join('');
+  box.innerHTML = cards.filter(Boolean).map((h, i) => `<article class="card dcard spot pop" style="--i:${i}">${h}</article>`).join('');
   requestAnimationFrame(() => requestAnimationFrame(() => {
     $$('#details .gauge,#details .sunarc').forEach(g => g.classList.add('go'));
     $$('#details .drop i').forEach(i => i.style.setProperty('--h', i.dataset.h));
@@ -1066,7 +1227,7 @@ function renderNino() {
 }
 
 function renderAll() {
-  renderHero(); renderAlerts(); renderHourly(); renderDetails(); renderDaily();
+  renderHero(); renderNowcast(); renderAlerts(); renderHourly(); renderDetails(); renderDaily();
   renderRegSeg(); renderKPIs(); renderMap(); renderCities(); renderNino(); renderRegImp();
   observeReveals();
 }
@@ -1079,10 +1240,24 @@ function toast(msg) {
 function setPin(city) {
   if (isPinned(city)) { S.pin = null; store.set('cw_pin', null); toast('Fixação removida'); }
   else { S.pin = pick(city); store.set('cw_pin', S.pin); toast(`📌 ${city.name} fixada como sua cidade da home`); }
+  syncPinToSW(); renderNotifyBox();
   renderHero(); renderMap(); renderCities(); renderMapInfo();
 }
 const UFS = {'acre':'AC','alagoas':'AL','amapá':'AP','amazonas':'AM','bahia':'BA','ceará':'CE','distrito federal':'DF','espírito santo':'ES','goiás':'GO','maranhão':'MA','mato grosso':'MT','mato grosso do sul':'MS','minas gerais':'MG','pará':'PA','paraíba':'PB','paraná':'PR','pernambuco':'PE','piauí':'PI','rio de janeiro':'RJ','rio grande do norte':'RN','rio grande do sul':'RS','rondônia':'RO','roraima':'RR','santa catarina':'SC','são paulo':'SP','sergipe':'SE','tocantins':'TO'};
 const pick = c => ({id: c.id, name: c.name, uf: c.uf || '', lat: c.lat, lon: c.lon, custom: !!c.custom});
+function cityURL(c) {
+  const u = new URL(location.href); u.search = ''; u.hash = '';
+  if (CITIES.some(x => x.id === c.id)) u.searchParams.set('c', c.id); else { u.searchParams.set('lat', c.lat.toFixed(4)); u.searchParams.set('lon', c.lon.toFixed(4)); u.searchParams.set('n', c.name); }
+  return u.toString();
+}
+async function shareCity() {
+  const V = view(); if (!V) return; const c = V.city, w = wx(V.c.weather_code);
+  const o = S.official && S.official.ok && S.official.alerts[0];
+  const text = `${c.name}${c.uf ? ' · ' + c.uf : ''} agora: ${rd(V.c.temperature_2m)}°, ${w.t.toLowerCase()}. Máx ${rd(V.dl.temperature_2m_max[V.t0])}° / mín ${rd(V.dl.temperature_2m_min[V.t0])}°. Chuva hoje: ${num(V.dl.precipitation_sum[V.t0], 1)} mm.` + (o ? `\n⚠️ Aviso do Inmet: ${o.title}.` : '');
+  const url = cityURL(c);
+  try { if (navigator.share) { await navigator.share({title: 'Clima Brasil', text, url}); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+  open('https://wa.me/?text=' + encodeURIComponent(text + '\n' + url), '_blank', 'noopener');
+}
 function setURL(c) {
   try {
     const u = new URL(location.href); u.search = '';
@@ -1106,7 +1281,7 @@ async function refreshAll(manual) {
   const res = await Promise.allSettled([loadRegion(), loadDetail(S.sel)]);
   btn.classList.remove('spin'); refreshing = false;
   const okD = res[1].status === 'fulfilled' && res[1].value !== false, okR = res[0].status === 'fulfilled';
-  if (okD || okR) { if (okD) { renderHero(); renderAlerts(); renderHourly(); renderDetails(); renderDaily(); applySkyFromDetail(); } if (okR) { renderKPIs(); renderMap(); renderCities(); renderNino(); renderRegImp(); } observeReveals(); markOk(res[1].status === 'fulfilled' && S.detail && S.detail.stale); if (manual) toast('Dados atualizados'); }
+  if (okD || okR) { if (okD) { renderHero(); renderNowcast(); renderAlerts(); renderHourly(); renderDetails(); renderDaily(); applySkyFromDetail(); } if (okR) { renderKPIs(); renderMap(); renderCities(); renderNino(); renderRegImp(); } observeReveals(); markOk(res[1].status === 'fulfilled' && S.detail && S.detail.stale); if (manual) toast('Dados atualizados'); }
   else { setLive('err', 'Sem conexão'); if (manual) toast('Não foi possível atualizar. Tentaremos de novo em breve.'); S.nextAt = Date.now() + 60000; }
 }
 function markOk(stale) { S.lastOk = Date.now(); S.nextAt = S.lastOk + REFRESH_MS; if (stale) { const d = new Date(S.detail.stale); setLive('err', 'Offline · dados de ' + pad(d.getHours()) + ':' + pad(d.getMinutes())); } else { setLive('ok'); tick(); } }
@@ -1196,6 +1371,9 @@ document.addEventListener('click', e => {
   else if (a === 'reg') { S.regFilter = (S.regFilter === t.dataset.k && t.dataset.from === 'imp') ? 'all' : t.dataset.k; renderRegSeg(); renderRegImp(); renderCities(true); }
   else if (a === 'rank') { S.rank = t.dataset.r; $$('#rankSeg button').forEach(b => b.classList.toggle('on', b === t)); renderCities(true); }
   else if (a === 'refresh') refreshAll(true);
+  else if (a === 'share') shareCity();
+  else if (a === 'lite') { store.set('cw_lite', !LITE); location.reload(); }
+  else if (a === 'notify') toggleNotify();
   else if (a === 'open-search') openSearch();
   else if (a === 'close-search') closeSearch();
   else if (a === 'geo') geo();
@@ -1238,7 +1416,7 @@ addEventListener('scroll', () => {
 /* ============ FX: canvas do céu ============ */
 const FX = (() => {
   const cv = $('#fx'), ctx = cv.getContext('2d');
-  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches || LITE;
   let W = 0, H = 0, dpr = 1, sc = {kind: 'clear', day: true, p: .3, cloud: 20, wind: 8, rain: 0, rh: 50, tw: null};
   let rain = [], clouds = [], stars = [], motes = [], flash = 0, bolt = null, shoot = null, raf = 0, last = 0, nextBolt = 0;
   const sprites = {};
@@ -1357,7 +1535,7 @@ async function loadEnso() {
 
 
 /* ============ animação El Niño ============ */
-const NA = {p: 0, playing: !matchMedia('(prefers-reduced-motion:reduce)').matches, t0: 0, vis: false};
+const NA = {p: 0, playing: !(matchMedia('(prefers-reduced-motion:reduce)').matches || LITE), t0: 0, vis: false};
 function naRender(p) {
   const e = p * p * (3 - 2 * p), g = id => document.getElementById(id);
   const cx = lerp(210, 590, e);
@@ -1411,13 +1589,16 @@ async function boot() {
   if (S.pin && !CITIES.some(c => c.id === S.pin.id)) S.custom[S.pin.id] = S.pin;
   observeReveals(); bindSpot();
   const [rD, rR] = await Promise.allSettled([loadDetail(S.sel), loadRegion()]);
-  if (rD.status === 'fulfilled') { renderHero(); renderAlerts(); renderHourly(); renderDetails(); renderDaily(); applySkyFromDetail(); }
+  if (rD.status === 'fulfilled') { renderHero(); renderNowcast(); renderAlerts(); renderHourly(); renderDetails(); renderDaily(); applySkyFromDetail(); }
   else { setLive('err', 'Sem conexão'); $('#hero').innerHTML = `<div class="card err-card"><h2 class="display">Não foi possível carregar os dados</h2><p>Verifique sua conexão com a internet e tente novamente.</p><button class="btn" data-act="refresh">Tentar novamente</button></div>`; }
   if (rR.status === 'fulfilled') { renderRegSeg(); renderKPIs(); renderMap(); renderCities(); renderNino(); renderRegImp(); }
   else { ['#kpis', '#cities', '#regImp'].forEach(s => $(s).innerHTML = '<div class="card err-card" style="grid-column:1/-1"><p>Não foi possível carregar o panorama da região agora.</p></div>'); }
   observeReveals();
   if (rD.status === 'fulfilled' || rR.status === 'fulfilled') markOk(S.detail && S.detail.stale);
   loadEnso(); setInterval(loadEnso, 3600000);
+  { const ED = '2026-11-05', e = $('#editRev'); if (e) { const d = new Date(ED + 'T12:00:00'), age = (Date.now() - d) / 864e5; e.textContent = pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear() + (age > 45 ? ' (pode estar desatualizado)' : ''); } }
+  { const lb = $('#liteBtn'); if (lb) lb.textContent = LITE ? 'Modo leve: ligado (desligar)' : 'Ativar modo leve'; }
+  if (CAN_API && 'serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').then(() => syncPinToSW()).catch(() => {});
   if (!S.pin && !q.get('c') && !q.get('lat') && navigator.permissions && navigator.geolocation) {
     navigator.permissions.query({name: 'geolocation'}).then(st => {
       if (st.state === 'granted') geo();
