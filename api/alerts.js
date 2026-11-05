@@ -53,7 +53,10 @@ async function fetchAll() {
 
 module.exports = async (req, res) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  const city = norm(req.query.city || '').trim(), uf = norm(req.query.uf || '').trim();
+  if (req.method !== 'GET' && req.method !== 'HEAD') { res.setHeader('Allow', 'GET, HEAD'); return res.status(405).json({ ok: false }); }
+  const one = v => (Array.isArray(v) ? v[0] : v);
+  const city = norm(one(req.query.city) || '').trim().slice(0, 80);
+  let uf = norm(one(req.query.uf) || '').trim(); if (!/^[a-z]{2}$/.test(uf)) uf = '';
   if (!city) return res.status(400).json({ ok: false, error: 'city obrigatório' });
   try {
     const all = await fetchAll();

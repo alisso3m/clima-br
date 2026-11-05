@@ -44,10 +44,15 @@ async function load() {
   return CACHE.pts;
 }
 
+const MEMO = new Map(), TTL = 1200000;
 module.exports = async (req, res) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  if (req.method !== 'GET' && req.method !== 'HEAD') { res.setHeader('Allow', 'GET, HEAD'); return res.status(405).json({ ok: false }); }
   const lat = Number(req.query.lat), lon = Number(req.query.lon);
-  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return res.status(400).json({ ok: false });
+  if (!Number.isFinite(lat) || !Number.isFinite(lon) || lat < -35 || lat > 6 || lon < -75 || lon > -32) return res.status(400).json({ ok: false });
+  const key = lat.toFixed(2) + ',' + lon.toFixed(2), hit = MEMO.get(key);
+  if (hit && Date.now() - hit.at < TTL) { res.setHeader('Cache-Control', 'public, s-maxage=600'); return res.status(200).send(hit.body); }
+  const send = res.send.bind(res); res.send = b => { if (res.statusCode === 200 && b && String(b).includes('"ok":true')) { if (MEMO.size >= 500) MEMO.delete(MEMO.keys().next().value); MEMO.set(key, { at: Date.now(), body: b }); } return send(b); };
   try {
     const pts = await load();
     const d = pts.filter(p => Math.abs(p.la - lat) < 0.7 && Math.abs(p.lo - lon) < 0.7).map(p => km(lat, lon, p.la, p.lo));

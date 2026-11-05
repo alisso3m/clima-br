@@ -7,6 +7,7 @@ self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Pr
 self.addEventListener('fetch', e => {
   const r = e.request, u = new URL(r.url);
   if (r.method !== 'GET' || u.origin !== location.origin) return;
+  if (u.pathname === '/api/wx') return; // o app já guarda o último dado no aparelho
   if (r.mode === 'navigate' || u.pathname.startsWith('/api/')) {
     e.respondWith(fetch(r).then(res => { if (res.ok) { const cp = res.clone(); caches.open(V).then(c => c.put(r.mode === 'navigate' ? '/' : r, cp)); } return res; })
       .catch(() => caches.match(r.mode === 'navigate' ? '/' : r).then(m => m || new Response('', {status: 503}))));
@@ -22,8 +23,9 @@ const state = {
 };
 self.addEventListener('message', e => {
   const d = e.data || {};
-  if (d.type === 'pin') e.waitUntil(state.set('pin', d.city || null));
-  if (d.type === 'notified') e.waitUntil(state.set('notified', d.ids || []));
+  const okStr = v => typeof v === 'string' && v.length <= 80;
+  if (d.type === 'pin') e.waitUntil(state.set('pin', d.city && okStr(d.city.name) && okStr(d.city.uf || '') ? {name: d.city.name, uf: d.city.uf || ''} : null));
+  if (d.type === 'notified' && Array.isArray(d.ids)) e.waitUntil(state.set('notified', d.ids.filter(okStr).slice(-60)));
 });
 
 async function checkAlerts() {

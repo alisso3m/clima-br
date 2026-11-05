@@ -37,6 +37,7 @@ async function get(url) {
 }
 
 module.exports = async (req, res) => {
+  if (req.method !== 'GET' && req.method !== 'HEAD') { res.setHeader('Allow', 'GET, HEAD'); return res.status(405).json({ error: 'método não permitido' }); }
   const [d, n] = await Promise.allSettled([get(DISC_URL), get(NINO_URL)]);
   const out = { source: 'NOAA/CPC', fetchedAt: new Date().toISOString(), discussion: null, nino34: null };
   if (d.status === 'fulfilled') out.discussion = parseDisc(d.value);

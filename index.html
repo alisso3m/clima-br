@@ -692,6 +692,7 @@ const rainColor = v => ramp([[0,'#f2cf8a'],[8,'#9ed6c4'],[30,'#5aa9ff'],[80,'#2d
 const rhColor = v => ramp([[15,'#ff7a45'],[30,'#ffc361'],[50,'#9de3b5'],[75,'#5aa9ff'],[95,'#3b5bff']], v);
 const dryColor = v => ramp([[0,'#5aa9ff'],[4,'#9de3b5'],[7,'#ffd45e'],[10,'#ff5b4a']], v);
 
+const sane = c => c && typeof c === 'object' && typeof c.name === 'string' && Number.isFinite(+c.lat) && Number.isFinite(+c.lon) && Math.abs(c.lat) <= 90 && Math.abs(c.lon) <= 180 && typeof c.id === 'string';
 const store = {
   get(k, d = null) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
@@ -1335,7 +1336,7 @@ function geo() {
     if (dist(near) >= 25) {
       let name = 'Minha localização', uf = '';
       try {
-        const r = await getJSON(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${la}&longitude=${lo}&localityLanguage=pt`, 1);
+        const r = await getJSON(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${(+la).toFixed(2)}&longitude=${(+lo).toFixed(2)}&localityLanguage=pt`, 1);
         name = r.city || r.locality || name; uf = UFS[(r.principalSubdivision || '').toLowerCase()] || '';
       } catch {}
       city = {id: 'geo' + la.toFixed(2) + lo.toFixed(2), name, uf, lat: la, lon: lo, custom: true};
@@ -1564,11 +1565,11 @@ function skeleton() {
 }
 async function boot() {
   skeleton();
-  S.pin = store.get('cw_pin');
+  S.pin = store.get('cw_pin'); if (!sane(S.pin)) S.pin = null;
   const q = new URLSearchParams(location.search);
   let start = null;
   if (q.get('c') && cityById(q.get('c'))) start = cityById(q.get('c'));
-  else if (q.get('lat') && q.get('lon') && !isNaN(+q.get('lat'))) start = {id: 'u' + q.get('lat') + q.get('lon'), name: (q.get('n') || 'Local').slice(0, 60), uf: '', lat: +q.get('lat'), lon: +q.get('lon'), custom: true};
+  else if (/^-?\d{1,3}(\.\d+)?$/.test(q.get('lat') || '') && /^-?\d{1,3}(\.\d+)?$/.test(q.get('lon') || '') && Math.abs(+q.get('lat')) <= 90 && Math.abs(+q.get('lon')) <= 180) start = {id: 'u' + (+q.get('lat')).toFixed(4) + '_' + (+q.get('lon')).toFixed(4), name: (q.get('n') || 'Local').replace(/[\u0000-\u001f<>]/g, '').slice(0, 60) || 'Local', uf: '', lat: +q.get('lat'), lon: +q.get('lon'), custom: true};
   else if (S.pin) start = cityById(S.pin.id) || S.pin;
   else start = cityById(DEFAULT_ID);
   S.sel = start;
